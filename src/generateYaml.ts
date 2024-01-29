@@ -7,6 +7,7 @@ export default async (options: YamlRequest) => {
   const template = <YamlTemplate>yaml.parse(await readFile('./src/template.yml', 'utf-8'))
   template.env.contexts[0].urls = [ options.url ]
   template.env.contexts[0].includePaths = [ options.url + '.*' ]
+  template.jobs[0].parameters.url = options.url
 
   template.env.contexts[0].users[0] = {
     name: 'User',
@@ -79,5 +80,10 @@ interface YamlTemplate {
       progressToStdout: boolean
     }
   }
-  jobs: any[]
+  jobs: {
+    name: 'spiderAjax' | 'activeScan'
+    parameters: {
+      url?: string
+    }
+  }[]
 }

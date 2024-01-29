@@ -38,5 +38,28 @@ env:
     progressToStdout: true
   vars: {}
 jobs:
-  # TODO: add AJAX spider and Active Scan as jobs
-
+- parameters:
+    context: "Automatic Scan"
+    user: "User"
+    # Generated automatically
+    # url: ""
+    maxDuration: 60
+    maxCrawlDepth: 10
+    numberOfBrowsers: 24
+    inScopeOnly: true
+    runOnlyIfModern: false
+  name: "spiderAjax"
+  type: "spiderAjax"
+- parameters:
+    context: "Automatic Scan"
+    user: "User"
+    policy: ""
+    maxRuleDurationInMins: 0
+    maxScanDurationInMins: 0
+    maxAlertsPerRule: 0
+  policyDefinition:
+    defaultStrength: "medium"
+    defaultThreshold: "medium"
+    rules: []
+  name: "activeScan"
+  type: "activeScan"
