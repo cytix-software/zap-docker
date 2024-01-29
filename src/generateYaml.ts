@@ -31,7 +31,7 @@ export default async (options: YamlRequest) => {
       loggedInRegex: options.loggedInRegex || '',
       loggedOutRegex: options.loggedOutRegex || '',
       pollFrequency: 60,
-      pollUnits: 'requests',
+      pollUnits: 'seconds',
       pollPostData: ''
     }
   }
@@ -58,7 +58,7 @@ interface YamlTemplate {
           loggedInRegex: string
           loggedOutRegex: string
           pollFrequency: number
-          pollUnits: 'requests'
+          pollUnits: 'requests' | 'seconds'
           pollUrl: string
           pollPostData: string
         }

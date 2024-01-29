@@ -43,13 +43,11 @@ jobs:
     user: "User"
     # Generated automatically
     # url: ""
-    maxDuration: 60
-    maxCrawlDepth: 10
-    numberOfBrowsers: 24
-    inScopeOnly: true
-    runOnlyIfModern: false
-  name: "spiderAjax"
-  type: "spiderAjax"
+    maxDuration: 15
+    maxDepth: 0
+    maxChildren: 0
+  name: "spider"
+  type: "spider"
 - parameters:
     context: "Automatic Scan"
     user: "User"
