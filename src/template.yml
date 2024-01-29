@@ -1,0 +1,42 @@
+---
+env:
+  contexts:
+  - name: "Automatic Scan"
+    # Generated automatically
+    # urls:
+    # - ""
+    # includePaths:
+    # - ""
+    excludePaths: []
+    authentication:
+      method: "browser"
+      # Generated automatically
+      # parameters:
+      #   loginPageUrl: ""
+      #   loginPageWait: 10
+      #   browserId: "firefox-headless"
+      # verification:
+      #   method: "poll"
+      #   loggedInRegex: ""
+      #   pollFrequency: 60
+      #   pollUnits: "requests"
+      #   pollUrl: ""
+      #   pollPostData: ""
+    sessionManagement:
+      method: "cookie"
+      parameters: {}
+    technology:
+      exclude: []
+    users:
+    - name: ""
+      credentials:
+        password: ""
+        username: ""
+  parameters:
+    failOnError: true
+    failOnWarning: false
+    progressToStdout: true
+  vars: {}
+jobs:
+  # TODO: add AJAX spider and Active Scan as jobs
+
