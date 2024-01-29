@@ -1,8 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import { readFile, writeFile } from 'fs/promises'
-import yaml from 'yaml'
-import util from 'util'
+import { writeFile } from 'fs/promises'
+import generateYaml from './generateYaml'
 dotenv.config()
 if (!process.env.ZAP_API_KEY) throw new Error('\x1b[31mEnvironment variable "ZAP_API_KEY" not set. This is required for authorising incoming requests.\x1b[0m')
 if (!process.env.FILE_PATH) throw new Error('\x1b[31mEnvironment variable "FILE_PATH" not set. This is required for saving the YML file to a custom path.\x1b[0m')
@@ -14,7 +13,7 @@ app.get('/', (req, res) => {
   return res.send('Healthy')
 })
 
-app.post('/yaml', async (req, res) => {
+app.post('/yaml', async (req, res, next) => {
   // Check Authorization 
   if (req.headers.authorization !== process.env.ZAP_API_KEY) {
     return res.sendStatus(401)
@@ -31,40 +30,10 @@ app.post('/yaml', async (req, res) => {
     return res.json({ message: `"url" paramter wasn't supplied.` })
   }
 
-  // Generate YAML file from body
-  const template = <YamlTemplate>yaml.parse(await readFile('./src/template.yml', 'utf-8'))
-  template.env.contexts[0].urls = [ body.url ]
-  template.env.contexts[0].includePaths = [ body.url + '.*' ]
-
-  template.env.contexts[0].users[0] = {
-    name: 'User',
-    credentials: {
-      username: body.username,
-      password: body.password
-    }
-  }
-
-  if (body.loginUrl) {
-    template.env.contexts[0].authentication.parameters = {
-      browserId: 'firefox-headless',
-      loginPageUrl: body.loginUrl,
-      loginPageWait: 10
-    }
-  }
-  if (body.pollUrl) {
-    template.env.contexts[0].authentication.verification = {
-      method: 'poll',
-      pollUrl: body.pollUrl,
-      loggedInRegex: body.loggedInRegex || '',
-      loggedOutRegex: body.loggedOutRegex || '',
-      pollFrequency: 60,
-      pollUnits: 'requests',
-      pollPostData: ''
-    }
-  }
+  const yml = await generateYaml(body).catch((e) => next(e))
+  if (!yml) return
 
   // Save to path set in environment variables
-  const yml = yaml.stringify(template)
   await writeFile(process.env.FILE_PATH || './output.yml', yml)
   return res.send(yml)
 })
@@ -81,48 +50,4 @@ export interface YamlRequest {
   pollUrl?: string
   loggedInRegex?: string
   loggedOutRegex?: string
-}
-
-interface YamlTemplate {
-  env: {
-    contexts: {
-      name: string
-      urls?: string[]
-      includePaths?: string[]
-      excludePaths: string[]
-      authentication: {
-        method: 'browser'
-        parameters?: {
-          loginPageUrl: string
-          loginPageWait: number
-          browserId: 'firefox-headless'
-        }
-        verification?: {
-          method: 'poll'
-          loggedInRegex: string
-          loggedOutRegex: string
-          pollFrequency: number
-          pollUnits: 'requests'
-          pollUrl: string
-          pollPostData: string
-        }
-      }
-      sessionManagement: {
-        method: string
-      }
-      users: {
-        name: string
-        credentials: {
-          username: string
-          password: string
-        }
-      }[]
-    }[]
-    parameters: {
-      failOnError: boolean
-      failOnWarning: boolean
-      progressToStdout: boolean
-    }
-  }
-  jobs: any[]
 }
