@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "nodemon ./src/index.ts",
     "serve": "node ./dist/index.js",
-    "build": "tsc && docker build -t zap .",
-    "serve:docker": "docker run -p 8080:8080 -p 8181:8181 --name zap -d zap"
+    "build": "tsc && docker build -t zap . && docker run -p 8080:8080 -p 8181:8181 --name zap -d zap && docker stop zap",
+    "serve:docker": "docker start zap"
   },
   "keywords": [],
   "author": "Cytix-Amy",
