@@ -4,7 +4,7 @@ import { writeFile } from 'fs/promises'
 import generateYaml from './generateYaml'
 dotenv.config()
 if (!process.env.API_KEY) throw new Error('\x1b[31mEnvironment variable "ZAP_API_KEY" not set. This is required for authorising incoming requests.\x1b[0m')
-if (!process.env.FILE_PATH) throw new Error('\x1b[31mEnvironment variable "FILE_PATH" not set. This is required for saving the YML file to a custom path.\x1b[0m')
+if (!process.env.WS_FILE_PATH) throw new Error('\x1b[31mEnvironment variable "FILE_PATH" not set. This is required for saving the YML file to a custom path.\x1b[0m')
 
 const app = express()
 app.use(express.json())
@@ -34,13 +34,13 @@ app.post('/yaml', async (req, res, next) => {
   if (!yml) return
 
   // Save to path set in environment variables
-  writeFile(process.env.FILE_PATH || './output.yml', yml)
+  await writeFile(process.env.WS_FILE_PATH || './output.yml', yml)
   .then(() => res.send(yml))
   .catch(e => next(e))
 })
 
-app.listen(80, () => {
-  console.log(`\n\x1b[33mServer running at \x1b[36mhttp://localhost:80\x1b[0m`)
+app.listen(process.env.WS_PORT ?? 80, () => {
+  console.log(`Server running on ${process.env.PORT ?? 80}`)
 })
 
 export interface YamlRequest {
