@@ -34,8 +34,9 @@ app.post('/yaml', async (req, res, next) => {
   if (!yml) return
 
   // Save to path set in environment variables
-  await writeFile(process.env.FILE_PATH || './output.yml', yml)
-  return res.send(yml)
+  writeFile(process.env.FILE_PATH || './output.yml', yml)
+  .then(() => res.send(yml))
+  .catch(e => next(e))
 })
 
 app.listen(80, () => {
