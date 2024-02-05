@@ -30,8 +30,9 @@ app.post('/yaml', async (req, res, next) => {
   if (!yml) return
 
   // Save to path set in environment variables
-  await writeFile(process.env.WS_FILE_PATH || './output.yml', yml)
-  .then(() => res.send(yml))
+  const filePath = process.env.WS_FILE_PATH || 'output.yml'
+  await writeFile(filePath, yml)
+  .then(() => res.json({ filePath }))
   .catch(e => { console.log(e); next(e) })
 })
 
