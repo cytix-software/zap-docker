@@ -2,36 +2,34 @@
 env:
   contexts:
   - name: "Automatic Scan"
-    # Generated automatically
+    excludePaths: []
     # urls:
     # - ""
     # includePaths:
     # - ""
-    excludePaths: []
-    authentication:
-      method: "browser"
-      # Generated automatically
+    # authentication:
+      # method: "browser"
       # parameters:
-      #   loginPageUrl: ""
-      #   loginPageWait: 10
-      #   browserId: "firefox-headless"
+        # loginPageUrl: ""
+        # loginPageWait: 10
+        # browserId: "firefox-headless"
       # verification:
-      #   method: "poll"
-      #   loggedInRegex: ""
-      #   pollFrequency: 60
-      #   pollUnits: "requests"
-      #   pollUrl: ""
-      #   pollPostData: ""
+        # method: "poll"
+        # loggedInRegex: ""
+        # pollFrequency: 60
+        # pollUnits: "requests"
+        # pollUrl: ""
+        # pollPostData: ""
     sessionManagement:
       method: "cookie"
       parameters: {}
     technology:
       exclude: []
-    users:
-    - name: ""
-      credentials:
-        password: ""
-        username: ""
+    # users:
+    # - name: "User"
+      # credentials:
+        # password: ""
+        # username: ""
   parameters:
     failOnError: true
     failOnWarning: false
@@ -40,8 +38,7 @@ env:
 jobs:
 - parameters:
     context: "Automatic Scan"
-    user: "User"
-    # Generated automatically
+    # user: "User"
     # url: ""
     maxDuration: 15
     maxDepth: 0
@@ -50,7 +47,7 @@ jobs:
   type: "spider"
 - parameters:
     context: "Automatic Scan"
-    user: "User"
+    # user: "User"
     policy: ""
     maxRuleDurationInMins: 0
     maxScanDurationInMins: 0

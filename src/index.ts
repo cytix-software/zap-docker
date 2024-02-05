@@ -21,10 +21,6 @@ app.post('/yaml', async (req, res, next) => {
 
   // Validate body
   const body = <YamlRequest>req.body
-  if (!body.username || !body.password) {
-    res.statusCode = 400
-    return res.json({ message: 'Username or password fields are undefined. Username and password are required in the request at a minimum.' })
-  }
   if (!body.url) {
     res.statusCode = 400
     return res.json({ message: `"url" paramter wasn't supplied.` })
@@ -44,9 +40,9 @@ app.listen(process.env.WS_PORT ?? 80, () => {
 })
 
 export interface YamlRequest {
-  username: string
-  password: string
   url: string
+  username?: string
+  password?: string
   loginUrl?: string
   pollUrl?: string
   loggedInRegex?: string
