@@ -21,9 +21,9 @@ app.post('/yaml', async (req, res, next) => {
 
   // Validate body
   const body = <YamlRequest>req.body
-  if (!body.url) {
+  if (!body.urls || !Array.isArray(body.urls)) {
     res.statusCode = 400
-    return res.json({ message: `"url" paramter wasn't supplied.` })
+    return res.json({ message: `"urls" paramter wasn't supplied or wasn't supplied as an array.` })
   }
 
   const yml = await generateYaml(body).catch((e) => { console.log(e); next(e) } )
@@ -40,7 +40,7 @@ app.listen(process.env.WS_PORT ?? 80, () => {
 })
 
 export interface YamlRequest {
-  url: string
+  urls: string[]
   username?: string
   password?: string
   loginUrl?: string
