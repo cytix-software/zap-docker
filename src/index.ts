@@ -30,17 +30,17 @@ app.post('/yaml', async (req, res, next) => {
     return res.json({ message: `"url" paramter wasn't supplied.` })
   }
 
-  const yml = await generateYaml(body).catch((e) => next(e))
+  const yml = await generateYaml(body).catch((e) => { console.log(e); next(e) } )
   if (!yml) return
 
   // Save to path set in environment variables
   await writeFile(process.env.WS_FILE_PATH || './output.yml', yml)
   .then(() => res.send(yml))
-  .catch(e => next(e))
+  .catch(e => { console.log(e); next(e) })
 })
 
 app.listen(process.env.WS_PORT ?? 80, () => {
-  console.log(`Server running on ${process.env.PORT ?? 80}`)
+  console.log(`Server running on ${process.env.WS_PORT ?? 80}`)
 })
 
 export interface YamlRequest {
