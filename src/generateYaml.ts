@@ -4,7 +4,7 @@ import { readFile} from 'fs/promises'
 
 /** Generate a YML string by merging the template file and options provided in the body. */
 export default async (options: YamlRequest) => {
-  const template = <YamlTemplate>yaml.parse(await readFile('./src/template.yml', 'utf-8'))
+  const template = <YamlTemplate>yaml.parse(await readFile('./dist/template.yml', 'utf-8'))
   template.env.contexts[0].urls = [ options.url ]
   template.env.contexts[0].includePaths = [ options.url + '.*' ]
   template.jobs[0].parameters.url = options.url
