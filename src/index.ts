@@ -2,9 +2,9 @@ import express from 'express'
 import dotenv from 'dotenv'
 import { writeFile } from 'fs/promises'
 import generateYaml from './generateYaml'
+import path from 'path'
 dotenv.config()
 if (!process.env.API_KEY) throw new Error('\x1b[31mEnvironment variable "API_KEY" not set. This is required for authorising incoming requests.\x1b[0m')
-if (!process.env.WS_FILE_PATH) throw new Error('\x1b[31mEnvironment variable "WS_FILE_PATH" not set. This is required for saving the YML file to a custom path.\x1b[0m')
 
 const app = express()
 app.use(express.json())
@@ -30,7 +30,7 @@ app.post('/yaml', async (req, res, next) => {
   if (!yml) return
 
   // Save to path set in environment variables
-  const filePath = process.env.WS_FILE_PATH || 'output.yml'
+  const filePath = process.env.WS_FILE_PATH || path.resolve('output.yml')
   await writeFile(filePath, yml)
   .then(() => res.json({ filePath }))
   .catch(e => { console.log(e); next(e) })
