@@ -2,9 +2,9 @@ import express from 'express'
 import dotenv from 'dotenv'
 import { writeFile } from 'fs/promises'
 import generateYaml from './generateYaml'
+import path from 'path'
 dotenv.config()
 if (!process.env.API_KEY) throw new Error('\x1b[31mEnvironment variable "API_KEY" not set. This is required for authorising incoming requests.\x1b[0m')
-if (!process.env.WS_FILE_PATH) throw new Error('\x1b[31mEnvironment variable "WS_FILE_PATH" not set. This is required for saving the YML file to a custom path.\x1b[0m')
 
 const app = express()
 app.use(express.json())
@@ -21,21 +21,18 @@ app.post('/yaml', async (req, res, next) => {
 
   // Validate body
   const body = <YamlRequest>req.body
-  if (!body.username || !body.password) {
+  if (!body.urls || !Array.isArray(body.urls)) {
     res.statusCode = 400
-    return res.json({ message: 'Username or password fields are undefined. Username and password are required in the request at a minimum.' })
-  }
-  if (!body.url) {
-    res.statusCode = 400
-    return res.json({ message: `"url" paramter wasn't supplied.` })
+    return res.json({ message: `"urls" paramter wasn't supplied or wasn't supplied as an array.` })
   }
 
   const yml = await generateYaml(body).catch((e) => { console.log(e); next(e) } )
   if (!yml) return
 
   // Save to path set in environment variables
-  await writeFile(process.env.WS_FILE_PATH || './output.yml', yml)
-  .then(() => res.send(yml))
+  const filePath = process.env.WS_FILE_PATH || path.resolve('output.yml')
+  await writeFile(filePath, yml)
+  .then(() => res.json({ filePath }))
   .catch(e => { console.log(e); next(e) })
 })
 
@@ -44,9 +41,9 @@ app.listen(process.env.WS_PORT ?? 80, () => {
 })
 
 export interface YamlRequest {
-  username: string
-  password: string
-  url: string
+  urls: string[]
+  username?: string
+  password?: string
   loginUrl?: string
   pollUrl?: string
   loggedInRegex?: string
