@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon ./src/index.ts",
     "serve": "node ./dist/index.js",
-    "build": "tsc && docker build -t zap . && docker run -p 8080:8080 -p 8181:8181 --name zap -d zap && docker stop zap",
+    "build": "tsc && cp ./src/template.yml ./dist/template.yml && docker build -t zap . && docker run -p 8080:8080 -p 8181:8181 --name zap -d zap && docker stop zap",
     "serve:docker": "docker start zap"
   },
   "keywords": [],
