@@ -52,6 +52,7 @@ jobs:
     maxRuleDurationInMins: 0
     maxScanDurationInMins: 0
     maxAlertsPerRule: 0
+    browserId: "chrome-headless"
   policyDefinition:
     defaultStrength: "medium"
     defaultThreshold: "medium"

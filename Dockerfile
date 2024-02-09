@@ -1,5 +1,5 @@
 # use ZAP as base image
-FROM softwaresecurityproject/zap-stable
+FROM --platform=linux/amd64 softwaresecurityproject/zap-stable:latest
 
 # define ZAP api key, web server file path and web server port
 ENV API_KEY=93bd5953-5d0a-4679-a52a-87a55033238b
@@ -13,9 +13,11 @@ EXPOSE ${ZAP_PORT} ${WS_PORT}
 USER root
 
 # instll curl & nodejs
-RUN apt-get install -y curl &&\
+RUN apt-get update &&\
+    apt-get install -y curl &&\
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&\
-    apt-get install -y nodejs
+    wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb &&\
+    apt-get install -y nodejs ./google-chrome-stable_current_amd64.deb
 
 # set the workdir to the yml api
 WORKDIR /srv/ymlapi

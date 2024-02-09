@@ -23,7 +23,7 @@ export default async (options: YamlRequest) => {
     template.env.contexts[0].authentication = {
       method: 'browser',
       parameters: {
-        browserId: 'firefox-headless',
+        browserId: 'chrome-headless',
         loginPageUrl: options.loginUrl,
         loginPageWait: 10
       }
@@ -61,7 +61,7 @@ interface YamlTemplate {
         parameters?: {
           loginPageUrl: string
           loginPageWait: number
-          browserId: 'firefox-headless'
+          browserId: 'chrome-headless'
         }
         verification?: {
           method: 'poll'
