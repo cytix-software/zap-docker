@@ -25,3 +25,16 @@ Request Body (JSON):
 }
 ```
 It is recommended to provide all the optional variables including both regexes as sometimes ZAP will be unable to verify that its authenticated, and make a lot of unnecessary login requests.
+
+### `POST /yamlFile`
+Instead of creating a YML file this will just accept a YML file in the body and save the body to the file path. It will return the file path it was saved to in the same way as `POST /yaml`.
+
+Request Body (Plain Text):
+```yml
+# A YML file that will work with Zap's Automation Engine
+env: 
+  contexts:
+    # ...
+jobs:
+  # ...
+```

@@ -7,6 +7,7 @@ dotenv.config()
 if (!process.env.API_KEY) throw new Error('\x1b[31mEnvironment variable "API_KEY" not set. This is required for authorising incoming requests.\x1b[0m')
 
 const app = express()
+app.use(express.text())
 app.use(express.json())
 
 app.get('/', (req, res) => {
@@ -32,6 +33,20 @@ app.post('/yaml', async (req, res, next) => {
   // Save to path set in environment variables
   const filePath = process.env.WS_FILE_PATH || path.resolve('output.yml')
   await writeFile(filePath, yml)
+  .then(() => res.json({ filePath }))
+  .catch(e => { console.log(e); next(e) })
+})
+
+/** Post an entire YAML file to be saved */
+app.post('/yamlFile', async (req, res, next) => {
+  // Check Authorization 
+  if (req.headers.authorization !== process.env.API_KEY) {
+    return res.sendStatus(401)
+  }
+
+  // Save to path set in environment variables
+  const filePath = process.env.WS_FILE_PATH || path.resolve('output.yml')
+  await writeFile(filePath, req.body)
   .then(() => res.json({ filePath }))
   .catch(e => { console.log(e); next(e) })
 })

@@ -61,7 +61,7 @@ interface YamlTemplate {
         parameters?: {
           loginPageUrl: string
           loginPageWait: number
-          browserId: 'chrome-headless'
+          browserId: 'firefox-headless' | 'chrome-headless'
         }
         verification?: {
           method: 'poll'
