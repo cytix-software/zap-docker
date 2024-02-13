@@ -44,6 +44,11 @@ app.post('/yamlFile', async (req, res, next) => {
     return res.sendStatus(401)
   }
 
+  if (typeof req.body !== 'string') {
+    res.statusCode = 400
+    return res.json({ message: 'Request body given is not a string' })
+  }
+
   // Save to path set in environment variables
   const filePath = process.env.WS_FILE_PATH || path.resolve('output.yml')
   await writeFile(filePath, req.body)
