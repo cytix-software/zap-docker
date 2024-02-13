@@ -9,6 +9,8 @@ const userName = 'User'
 export default async (options: YamlRequest) => {
   const template = <YamlTemplate>yaml.parse(await readFile('./dist/template.yml', 'utf-8'))
   template.env.contexts[0].urls = options.urls
+  template.env.contexts[0].includePaths = options.urls.map(u => u + '.*')
+  template.jobs[0].parameters.url = options.urls[0]
 
   if (options.username && options.password && options.loginUrl) {
     // Authenticated Scanning, populate YAML file with auth information

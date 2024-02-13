@@ -7,17 +7,19 @@ env:
     # - ""
     # includePaths:
     # - ""
-    # authentication:
+    authentication:
       # method: "browser"
+      parameters: {}
       # parameters:
-        # loginPageUrl: ""
-        # loginPageWait: 10
-        # browserId: "firefox-headless"
-      # verification:
+      #   loginPageUrl: ""
+      #   loginPageWait: 10
+      #   browserId: "firefox-headless"
+      verification:
+        method: "response"
+        pollFrequency: 60
+        pollUnits: "requests"
         # method: "poll"
         # loggedInRegex: ""
-        # pollFrequency: 60
-        # pollUnits: "requests"
         # pollUrl: ""
         # pollPostData: ""
     sessionManagement:
@@ -38,16 +40,16 @@ env:
 jobs:
 - parameters:
     context: "Automatic Scan"
-    # user: "User"
-    # url: ""
-    maxDuration: 15
+    user: ""
+    url: ""
+    maxDuration: 0
     maxDepth: 0
     maxChildren: 0
   name: "spider"
   type: "spider"
 - parameters:
     context: "Automatic Scan"
-    # user: "User"
+    user: ""
     policy: ""
     maxRuleDurationInMins: 0
     maxScanDurationInMins: 0
