@@ -3,18 +3,18 @@ import dotenv from 'dotenv'
 import { writeFile } from 'fs/promises'
 import generateYaml from './generateYaml'
 import path from 'path'
+import multer from 'multer'
 dotenv.config()
 if (!process.env.API_KEY) throw new Error('\x1b[31mEnvironment variable "API_KEY" not set. This is required for authorising incoming requests.\x1b[0m')
 
 const app = express()
-app.use(express.text())
-app.use(express.json())
+const upload = multer()
 
 app.get('/', (req, res) => {
   return res.send('Healthy')
 })
 
-app.post('/yaml', async (req, res, next) => {
+app.post('/yaml', express.json(), async (req, res, next) => {
   // Check Authorization 
   if (req.headers.authorization !== process.env.API_KEY) {
     return res.sendStatus(401)
@@ -38,20 +38,21 @@ app.post('/yaml', async (req, res, next) => {
 })
 
 /** Post an entire YAML file to be saved */
-app.post('/yamlFile', async (req, res, next) => {
-  // Check Authorization 
+app.post('/yamlFile', upload.any(), async (req, res, next) => {
+  // Check Authorization
   if (req.headers.authorization !== process.env.API_KEY) {
     return res.sendStatus(401)
   }
+  if (!req.files) return res.status(400).json({ message: 'No files sent.' })
+  if (!Array.isArray(req.files)) return res.status(400).json({ message: 'Files not returned as array.' })
 
-  if (typeof req.body !== 'string') {
-    res.statusCode = 400
-    return res.json({ message: 'Request body given is not a string' })
-  }
+  const file = req.files[0]
+  if (!file) return res.status(400).json({ message: 'Data received is not a file.'})
+  if (file.mimetype !== 'text/yaml') return res.status(400).json({ message: 'File sent is not a yaml file.' })
 
   // Save to path set in environment variables
   const filePath = process.env.WS_FILE_PATH || path.resolve('output.yml')
-  await writeFile(filePath, req.body)
+  await writeFile(filePath, req.files[0].buffer.toString())
   .then(() => res.json({ filePath }))
   .catch(e => { console.log(e); next(e) })
 })
