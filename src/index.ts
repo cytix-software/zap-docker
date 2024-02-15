@@ -52,7 +52,7 @@ app.post('/yamlFile', upload.any(), async (req, res, next) => {
 
   // Save to path set in environment variables
   const filePath = process.env.WS_FILE_PATH || path.resolve('output.yml')
-  await writeFile(filePath, req.files[0].buffer.toString())
+  await writeFile(filePath, req.files[0].buffer)
   .then(() => res.json({ filePath }))
   .catch(e => { console.log(e); next(e) })
 })
