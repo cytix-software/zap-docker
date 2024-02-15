@@ -33,7 +33,7 @@ env:
         # password: ""
         # username: ""
   parameters:
-    failOnError: true
+    failOnError: false
     failOnWarning: false
     progressToStdout: true
   vars: {}
