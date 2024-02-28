@@ -1,7 +1,6 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import { writeFile } from 'fs/promises'
-import generateYaml from './generateYaml'
 import path from 'path'
 import multer from 'multer'
 dotenv.config()
@@ -14,31 +13,8 @@ app.get('/', (req, res) => {
   return res.send('Healthy')
 })
 
-app.post('/yaml', express.json(), async (req, res, next) => {
-  // Check Authorization 
-  if (req.headers.authorization !== process.env.API_KEY) {
-    return res.sendStatus(401)
-  }
-
-  // Validate body
-  const body = <YamlRequest>req.body
-  if (!body.urls || !Array.isArray(body.urls)) {
-    res.statusCode = 400
-    return res.json({ message: `"urls" paramter wasn't supplied or wasn't supplied as an array.` })
-  }
-
-  const yml = await generateYaml(body).catch((e) => { console.log(e); next(e) } )
-  if (!yml) return
-
-  // Save to path set in environment variables
-  const filePath = process.env.WS_FILE_PATH || path.resolve('output.yml')
-  await writeFile(filePath, yml)
-  .then(() => res.json({ filePath }))
-  .catch(e => { console.log(e); next(e) })
-})
-
 /** Post an entire YAML file to be saved */
-app.post('/yamlFile', upload.any(), async (req, res, next) => {
+app.post('/yaml', upload.any(), async (req, res, next) => {
   // Check Authorization
   if (req.headers.authorization !== process.env.API_KEY) {
     return res.sendStatus(401)

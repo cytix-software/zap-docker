@@ -4,7 +4,7 @@
 cd /srv/ymlapi && npm run serve &
 
 # define the log file location
-LOG_FILE=/root/.ZAP/zap.log
+LOG_FILE=`find / -type f -name "zap.log"`
 
 # remove a log file if it is found
 if [ -f "$LOG_FILE" ]; then
@@ -12,7 +12,7 @@ if [ -f "$LOG_FILE" ]; then
 fi
 
 # cd to zap
-cd /zap && zap.sh -daemon -host 0.0.0.0 -Xmx2048m -port ${ZAP_PORT} -config api.addrs.addr.name=.* -config selenium.chromeArgs.arg.argument=--disable-dev-shm-usage -config api.addrs.addr.regex=true -config selenium.chromeArgs.arg.argument=--no-sandbox -config rules.domxss.browserid=chrome-headless -config api.key=${API_KEY} &
+cd /zap && zap.sh -daemon -nostdout -host 0.0.0.0 -Xmx2048m -port ${ZAP_PORT} -config api.addrs.addr.name=.* -config selenium.chromeArgs.arg.argument=--disable-dev-shm-usage -config api.addrs.addr.regex=true -config selenium.chromeArgs.arg.argument=--no-sandbox -config rules.domxss.browserid=chrome-headless -config api.key=${API_KEY} &
 
 # get the zap pid from the previous process
 ZAP_PID=$!
@@ -20,17 +20,30 @@ ZAP_PID=$!
 # wait for ZAP log file before continuing
 while [ ! -f "$LOG_FILE" ]; do
   echo "Waiting for ZAP log file to be present."
+  LOG_FILE=`find / -type f -name "zap.log"`
   sleep 1
 done
 
-# only terminate the zap process if auth test fails
-while true; do
-  if grep -q "failed: Auth Test" /root/.ZAP/zap.log; then
-    kill $ZAP_PID
-    exit 1
-  fi
+# echo any errors to the console
+tail -F $LOG_FILE | grep --line-buffered -E "ERROR|Job spider|Job activeScan|start host http" &
+
+# wait for zap to be online
+while ! curl -sf -o /dev/null http://localhost:${ZAP_PORT}; do
+  echo "Waiting for ZAP server to come online - (retry in 5 seconds)"
   sleep 5
 done
+
+# echo online and server URL to console
+echo "ZAP Server is online - http://localhost:${ZAP_PORT}"
+
+# only terminate the zap process if auth test fails
+# while true; do
+#   if grep -q "failed: Auth Test" /root/.ZAP/zap.log; then
+#     kill $ZAP_PID
+#     exit 1
+#   fi
+#   sleep 5
+# done
 
 # wait until any process terminates
 wait -n

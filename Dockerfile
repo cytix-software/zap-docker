@@ -10,6 +10,9 @@ ENV ZAP_PORT=8180
 # expose ZAP_PORT and PORT
 EXPOSE ${ZAP_PORT} ${WS_PORT}
 
+# set healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 CMD curl --fail http://localhost:${ZAP_PORT} || exit 1
+
 # set the user to root
 USER root
 
