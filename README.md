@@ -4,7 +4,7 @@ This respository serves as a deployable instance of a ZAP container specifically
 
 Although no warranty or support is offered on this repository, Cytix will endeavour to keep this repository up to date as newer versions of ZAP are relelased by the SSP Team.
 
-# Build/Installation Instructions
+## Build/Installation Instructions
 
 For local deployments of the Cytix ZAP container (which we recommend only for testing/development purposes), clone the repository and deploy it into your local docker environment using the commands below:
 
