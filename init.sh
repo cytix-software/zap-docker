@@ -30,7 +30,7 @@ ZAP_PID=$!
 # wait for ZAP log file before continuing
 while [ ! -f "$LOG_FILE" ]; do
   echo "Waiting for ZAP log file to be present."
-  LOG_FILE=`find / -type f -name "zap.log"`
+  LOG_FILE=$(find / -type f -name "zap.log" 2>/dev/null)
   sleep 1
 done
 
