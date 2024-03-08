@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # define the log file location
-LOG_FILE=`find / -type f -name "zap.log"`
+LOG_FILE=$(find / -type f -name "zap.log" 2>/dev/null)
 
 # remove a log file if it is found
 if [ -f "$LOG_FILE" ]; then
