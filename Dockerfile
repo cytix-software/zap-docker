@@ -15,7 +15,9 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 CMD curl 
 USER root
 
 # get chrome v114.x which works with the ZAP WebDriver
-RUN wget https://dl.google.com/linux/deb/pool/main/g/google-chrome-stable/google-chrome-stable_122.0.6261.69-1_amd64.deb -O /tmp/chrome.deb &&\
+RUN apt-get update &&\
+    apt-get upgrade &&\
+    wget https://dl.google.com/linux/deb/pool/main/g/google-chrome-stable/google-chrome-stable_122.0.6261.69-1_amd64.deb -O /tmp/chrome.deb &&\
     apt install -y /tmp/chrome.deb &&\
     rm /tmp/chrome.deb
 

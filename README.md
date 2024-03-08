@@ -19,7 +19,7 @@ docker build -t cytix-zap .
 docker run -d -t -i \
   -e API_KEY='MY_SUPER_SECRET_API_KEY' \
   -p 8080:8080 \
-  --name zap .
+  --name zap cytix-zap
 ```
 
 Following a successful build using the steps above, the ZAP server should now be accessible via http://localhost:8080/. The API key used will be as supplied in the `-e API_KEY` flag above. If no `API_KEY` is specified at runtime, the key used will be `MY_SUPER_SECRET_API_KEY`.
