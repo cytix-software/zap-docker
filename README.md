@@ -1,32 +1,44 @@
-# Zap YML Injector
-- ⚠️ Environment Variable `API_KEY` must be set before running. This is used to authorise requests to the server.
-- Optionally, the variable `WS_FILE_PATH` can be set to determine the location/name of the YML file. By default this is `./output.yml`.
-- The variable `WS_PORT` can also be optionally set to determine port. By default this is `80`.
+# ZAP Docker
 
-To start the server, run `npm run dev`.
+This respository serves as a deployable instance of a ZAP container specifically tuned to work with the Cytix Portal and ZAP Integration.
 
-## API Endpoints
-### `POST /yaml`
-This endpoint will save the resulting YML file to `FILE_PATH` and return the file path it was saved to as a JSON object under the parameter `filePath`.
+Although no warranty or support is offered on this repository, Cytix will endeavour to keep this repository up to date as newer versions of ZAP are relelased by the SSP Team.
 
-Request Body (JSON):
-```ts
-{
-  // Required
-  urls: string[]
+# Build/Installation Instructions
 
-  // Optional
-  username: string
-  password: string
-  loginUrl: string
-  pollUrl: string
-  loggedInRegex: string
-  loggedOutRegex: string
-}
+For local deployments of the Cytix ZAP container (which we recommend only for testing/development purposes), clone the repository and deploy it into your local docker environment using the commands below:
+
+```bash
+# Begin by cloning the zap-docker Github Repo
+git clone https://github.com/cytix-software/zap-docker.git && cd zap-docker
+
+# build a local image of the container
+docker build -t cytix-zap .
+
+# run a new docker container with the image just built
+docker run -d -t -i \
+  -e API_KEY='MY_SUPER_SECRET_API_KEY' \
+  -p 8080:8080 \
+  --name zap .
 ```
-It is recommended to provide all the optional variables including both regexes as sometimes ZAP will be unable to verify that its authenticated, and make a lot of unnecessary login requests.
 
-### `POST /yamlFile`
-Instead of creating a YML file this will just accept a YML file in the body as `multipart/form-data` and save the body to the file path. It will return the file path it was saved to in the same way as `POST /yaml`.
+Following a successful build using the steps above, the ZAP server should now be accessible via http://localhost:8080/. The API key used will be as supplied in the `-e API_KEY` flag above. If no `API_KEY` is specified at runtime, the key used will be `MY_SUPER_SECRET_API_KEY`.
 
-The field name doesn't matter, this endpoint will save the first file it receives as long as it has a yaml extension.
+## Environmental Variables
+
+### API_KEY
+> `-e API_KEY='MY_SUPER_SECRET_API_KEY'`
+
+Use this to specify an API_KEY to communicate with the container. This should be a secure value and
+treated as a password/secret. It is **HIGHLY RECOMMENDED** for you to change this value, especially if
+you are running this container in a production environment.
+
+### ZAP_PORT
+> `-e ZAP_PORT=8080`
+
+Use this to specify a different port to run ZAP with. For local development where you may have additonal
+services running on `8080`, we recommended `8180` instead.
+
+## Deployment to the Cloud (AWS Example)
+
+> Coming Soon
