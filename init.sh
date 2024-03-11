@@ -38,13 +38,13 @@ done
 tail -F $LOG_FILE | grep --line-buffered -E "ERROR|Job spider|Job activeScan|start host http" &
 
 # wait for zap to be online
-while ! curl -sf -o /dev/null http://localhost:${ZAP_PORT}; do
+while ! curl -sf -o /dev/null http://127.0.0.1:${ZAP_PORT}; do
   echo "Waiting for ZAP server to come online - (retry in 5 seconds)"
   sleep 5
 done
 
 # echo online and server URL to console
-echo "ZAP Server is online - http://localhost:${ZAP_PORT}"
+echo "ZAP Server is online - http://127.0.0.1:${ZAP_PORT}"
 
 # wait until any process terminates
 wait -n
