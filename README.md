@@ -26,7 +26,8 @@ Alternatively, if you want to run a container without building first, you can ru
 
 ```bash
 docker run -d -t -i \
-  -e API_KEY='MY_SUPER_SECRET_API_KEY'
+  --platform=linux/amd64 \
+  -e API_KEY='MY_SUPER_SECRET_API_KEY' \
   -p 8080:8080 \
   --name zap ghcr.io/cytix-software/zap-docker:latest
 ```
