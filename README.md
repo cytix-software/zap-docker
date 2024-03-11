@@ -22,6 +22,15 @@ docker run -d -t -i \
   --name zap cytix-zap
 ```
 
+Alternatively, if you want to run a container without building first, you can run the following command to get the built image from `ghcr.io`:
+
+```bash
+docker run -d -t -i \
+  -e API_KEY='MY_SUPER_SECRET_API_KEY'
+  -p 8080:8080 \
+  --name zap ghcr.io/cytix-software/zap-docker:latest
+```
+
 Following a successful build using the steps above, the ZAP server should now be accessible via http://localhost:8080/. The API key used will be as supplied in the `-e API_KEY` flag above. If no `API_KEY` is specified at runtime, the key used will be `MY_SUPER_SECRET_API_KEY`.
 
 ## Environmental Variables
