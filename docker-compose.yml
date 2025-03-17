@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: cytix-zap
+    ports:
+      - "8080:8080"
+    network_mode: host # On macOS you'll need to ensure that the 'enable host networking' option is set in Docker Desktop's preferences, otherwise the installation of maven and apt packages will fail. (not sure why this doesn't affect git tho)
+    volumes:
+      - .:/app
+    environment:
+      API_KEY: "MY_SUPER_SECRET_API_KEY"
+      ZAP_PORT: 8080
